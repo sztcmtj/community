@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.annotation.Resource;
-import java.io.IOException;
+import javax.servlet.http.HttpServletRequest;
 
 @Controller
 public class AuthorizeController {
@@ -21,17 +21,22 @@ public class AuthorizeController {
     private String client_secret;
     @Value("${github.redirect.uri}")
     private String redirect_uri;
+
     @GetMapping("/callback")
     public String getToken(@RequestParam(name = "code")String code,
-                           @RequestParam(name = "state")String state) {
+                           @RequestParam(name = "state")String state,
+                           HttpServletRequest request) {
         AccessTokenDTO accessTokenDTO = new AccessTokenDTO();
         accessTokenDTO.setClient_id(client_id);
         accessTokenDTO.setClient_secret(client_secret);
         accessTokenDTO.setCode(code);
         accessTokenDTO.setRedirect_uri(redirect_uri);
         String accessToken = githubProvider.getAccessToken(accessTokenDTO);
-        GithubUser githubUser = githubProvider.getUser(accessToken);
-        System.out.println(githubUser.getName());
-        return "index";
+        GithubUser user = githubProvider.getUser(accessToken);
+        if (user != null) {
+            request.getSession().setAttribute("user", user);
+            return "redirect:/";
+        }
+        return "redirect:/";
     }
 }
