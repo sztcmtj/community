@@ -43,7 +43,7 @@ public class AuthorizeController {
         accessTokenDTO.setState(state);
         String accessToken = githubProvider.getAccessToken(accessTokenDTO);
         GithubUser githubUser = githubProvider.getUser(accessToken);
-        if (githubUser != null) {
+        if (githubUser != null && githubUser.getId() != null) {
             User user = new User();
             String token = UUID.randomUUID().toString();
             user.setToken(token);
@@ -54,7 +54,9 @@ public class AuthorizeController {
             response.addCookie(new Cookie("token", token));
             userMapper.insertUser(user);
             return "redirect:/";
+        } else {
+            // 登陆失败，重新登陆
+            return "redirect:/";
         }
-        return "redirect:/";
     }
 }
