@@ -1,22 +1,30 @@
 package com.nanxiaoqiao.community.controllers;
 
+import com.nanxiaoqiao.community.dto.PaginationDTO;
+import com.nanxiaoqiao.community.dto.QuestionDTO;
+import com.nanxiaoqiao.community.mapper.QuestionMapper;
 import com.nanxiaoqiao.community.mapper.UserMapper;
 import com.nanxiaoqiao.community.model.User;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.nanxiaoqiao.community.service.QuestionService;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import javax.annotation.Resource;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 @Controller
 public class IndexController {
 
-    @Autowired
+    @Resource(name = "userMapper")
     private UserMapper userMapper;
+    @Resource(name="questionService")
+    private QuestionService questionService;
 
     @GetMapping("/")
-    public String index(HttpServletRequest request) {
+    public String index(HttpServletRequest request, Model model) {
         Cookie[] cookies = request.getCookies();
         if (cookies != null) {
             for (Cookie cookie : cookies) {
@@ -30,6 +38,8 @@ public class IndexController {
                 }
             }
         }
+        PaginationDTO pagination = questionService.list(1, 5);
+        model.addAttribute("pagination", pagination);
         return "index";
     }
 }

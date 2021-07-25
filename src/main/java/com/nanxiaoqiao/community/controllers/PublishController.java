@@ -28,19 +28,20 @@ public class PublishController {
     }
 
     @PostMapping("/publish")
-    public String doPublish(@RequestParam("title")String title,
-                            @RequestParam("description")String description,
-                            @RequestParam("tag")String tag,
+    public String doPublish(@RequestParam(value = "title", required = false)String title,
+                            @RequestParam(value = "description", required = false)String description,
+                            @RequestParam(value = "tag", required = false)String tag,
                             HttpServletRequest request,
                             Model model) {
+        // 回显
         model.addAttribute("title", title);
         model.addAttribute("description", description);
         model.addAttribute("tag", tag);
+        // 空值验证
         if (title == null || StringUtils.isEmpty(title)) {
             model.addAttribute("error", "标题不能为空");
             return "publish";
         }
-
         if (description == null || StringUtils.isEmpty(description)) {
             model.addAttribute("error", "内容不能为空");
             return "publish";
@@ -59,7 +60,7 @@ public class PublishController {
                 }
             }
         }
-
+        // 入库
         Question question = new Question();
         question.setTitle(title);
         question.setDescription(description);
