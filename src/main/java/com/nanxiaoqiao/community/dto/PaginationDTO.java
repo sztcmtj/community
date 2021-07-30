@@ -23,11 +23,7 @@ public class PaginationDTO {
     private int page;
 
     public void setPagination(int totalCount, int page, int size) {
-        this.hasPrevious = page != 1;
-        this.hasNext = page != totalCount;
-        this.showFirstPage = !pages.contains(1);
-        this.showEndPage = !pages.contains(totalCount);
-
+        this.page = page;
         this.pages.add(page);
         int totalPage = 0;
         if (totalCount % size == 0) {
@@ -38,12 +34,17 @@ public class PaginationDTO {
 
         for (int i = 1; i <= 3; i++) {
             if (page - i >= 1) {
-                pages.add(page - i, 0);
+                pages.add(0, page - i);
             }
 
             if (page + i <= totalPage) {
                 pages.add(page + i);
             }
         }
+
+        this.hasPrevious = page != 1;
+        this.hasNext = page != totalPage;
+        this.showFirstPage = !pages.contains(1);
+        this.showEndPage = !pages.contains(totalPage);
     }
 }
