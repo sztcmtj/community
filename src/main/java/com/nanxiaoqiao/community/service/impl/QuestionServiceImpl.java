@@ -1,0 +1,54 @@
+package com.nanxiaoqiao.community.service.impl;
+
+import com.nanxiaoqiao.community.dto.PaginationDTO;
+import com.nanxiaoqiao.community.dto.QuestionDTO;
+import com.nanxiaoqiao.community.mapper.QuestionMapper;
+import com.nanxiaoqiao.community.mapper.UserMapper;
+import com.nanxiaoqiao.community.model.Question;
+import com.nanxiaoqiao.community.model.User;
+import com.nanxiaoqiao.community.service.QuestionService;
+import org.springframework.beans.BeanUtils;
+import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.List;
+
+@Service("questionService")
+public class QuestionServiceImpl implements QuestionService {
+    @Resource(name = "questionMapper")
+    private QuestionMapper questionMapper;
+    @Resource(name = "userMapper")
+    private UserMapper userMapper;
+
+    public PaginationDTO list(int page, int size) {
+        PaginationDTO pagination = new PaginationDTO();
+        int totalCount = questionMapper.getTotalCount();
+        // 计算总页数
+        int totalPage = (totalCount % size == 0) ? (totalCount / size) : (totalCount / size + 1);
+        pagination.setTotalPage(totalPage);
+        // 范围限制
+        if (page <= 0) {
+            page = 1;
+        } else if (page > pagination.getTotalPage()) {
+            page = pagination.getTotalPage();
+        }
+        pagination.setPagination(page);
+        int offset = (page - 1) * size;
+        List<Question> questions = questionMapper.list(offset, size);
+        List<QuestionDTO> questionDTOS = new ArrayList<>();
+        for (Question question: questions) {
+            Integer id = question.getCreator();
+            User user = userMapper.findUserById(id);
+            QuestionDTO questionDTO = new QuestionDTO();
+            BeanUtils.copyProperties(question, questionDTO);
+            questionDTO.setUser(user);
+            questionDTOS.add(questionDTO);
+        }
+
+        pagination.setQuestionDTOs(questionDTOS);
+
+        return pagination;
+    }
+
+}

@@ -4,7 +4,6 @@ import com.nanxiaoqiao.community.dto.PaginationDTO;
 import com.nanxiaoqiao.community.mapper.UserMapper;
 import com.nanxiaoqiao.community.model.User;
 import com.nanxiaoqiao.community.service.QuestionService;
-import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
