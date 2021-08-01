@@ -13,7 +13,7 @@
 <div th:insert="~{navigation :: nav}"></div>
 <div class="container-fluid main profile">
     <div class="row">
-        <div class="col-lg-9 col-md-12 col-xs-12 col-xs-12">
+        <div class="col-lg-9 col-md-9 col-xs-9 col-xs-9">
             <h2><span th:text="${sectionName}"></span></h2>
             <hr>
             <div class="media" th:each="question : ${pagination.questionDTOs}">
@@ -62,7 +62,7 @@
                 </ul>
             </nav>
         </div>
-        <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12">
+        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
             <div class="list-group section">
                 <div >
                     <a href="/profile/questions" th:class="${section == 'questions'} ? 'active list-group-item' : 'list-group-item'">我的问题</a></div>
