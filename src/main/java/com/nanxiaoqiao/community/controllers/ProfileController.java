@@ -16,14 +16,11 @@ import javax.servlet.http.HttpServletRequest;
 
 @Controller
 public class ProfileController {
-    @Resource(name="userMapper")
-    private UserMapper userMapper;
-
     @Resource(name="questionService")
     private QuestionService questionService;
 
     @GetMapping("/profile/{action}")
-    public String profile(@PathVariable("action")String action,
+    public String profile(@PathVariable(name="action")String action,
                           Model model,
                           HttpServletRequest request,
                           @RequestParam(value = "page", defaultValue = "1") Integer page,

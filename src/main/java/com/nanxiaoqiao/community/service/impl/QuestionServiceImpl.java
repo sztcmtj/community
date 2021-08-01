@@ -84,4 +84,14 @@ public class QuestionServiceImpl implements QuestionService {
         return pagination;
     }
 
+    @Override
+    public QuestionDTO getQuestionById(Integer questionId) {
+        QuestionDTO questionDTO = new QuestionDTO();
+        Question question = questionMapper.getQuestionById(questionId);
+        BeanUtils.copyProperties(question, questionDTO);
+        User user = userMapper.findUserById(question.getCreator());
+        questionDTO.setUser(user);
+        return questionDTO;
+    }
+
 }
