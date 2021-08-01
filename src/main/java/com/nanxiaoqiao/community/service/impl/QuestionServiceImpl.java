@@ -23,7 +23,7 @@ public class QuestionServiceImpl implements QuestionService {
 
     public PaginationDTO list(int page, int size) {
         PaginationDTO pagination = new PaginationDTO();
-        int totalCount = questionMapper.getTotalCount();
+        int totalCount = questionMapper.count();
         // 计算总页数
         int totalPage = (totalCount % size == 0) ? (totalCount / size) : (totalCount / size + 1);
         pagination.setTotalPage(totalPage);
@@ -39,6 +39,39 @@ public class QuestionServiceImpl implements QuestionService {
         List<QuestionDTO> questionDTOS = new ArrayList<>();
         for (Question question: questions) {
             Integer id = question.getCreator();
+            User user = userMapper.findUserById(id);
+            QuestionDTO questionDTO = new QuestionDTO();
+            BeanUtils.copyProperties(question, questionDTO);
+            questionDTO.setUser(user);
+            questionDTOS.add(questionDTO);
+        }
+
+        pagination.setQuestionDTOs(questionDTOS);
+
+        return pagination;
+    }
+
+
+    @Override
+    public PaginationDTO list(Integer id, Integer page, Integer size) {
+        PaginationDTO pagination = new PaginationDTO();
+        int totalCount = questionMapper.countByUserId(id);
+        // 计算总页数
+        int totalPage = (totalCount % size == 0) ? (totalCount / size) : (totalCount / size + 1);
+        pagination.setTotalPage(totalPage);
+
+        // 范围限制
+        if (page <= 0) {
+            page = 1;
+        } else if (page > pagination.getTotalPage()) {
+            page = pagination.getTotalPage();
+        }
+
+        pagination.setPagination(page);
+        int offset = (page - 1) * size;
+        List<Question> questions = questionMapper.listByUserId(id, offset, size);
+        List<QuestionDTO> questionDTOS = new ArrayList<>();
+        for (Question question: questions) {
             User user = userMapper.findUserById(id);
             QuestionDTO questionDTO = new QuestionDTO();
             BeanUtils.copyProperties(question, questionDTO);

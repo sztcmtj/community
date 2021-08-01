@@ -60,6 +60,11 @@ public class PublishController {
                 }
             }
         }
+
+        if (user == null) {
+            model.addAttribute("error", "用户未登录");
+            return "publish";
+        }
         // 入库
         Question question = new Question();
         question.setTitle(title);
@@ -67,12 +72,7 @@ public class PublishController {
         question.setTag(tag);
         question.setGmtCreate(System.currentTimeMillis());
         question.setGmtModified(System.currentTimeMillis());
-        if (user == null) {
-            model.addAttribute("error", "用户未登录");
-            return "publish";
-        } else {
-            question.setCreator(user.getId());
-        }
+        question.setCreator(user.getId());
         questionMapper.create(question);
         return "redirect:/";
     }
