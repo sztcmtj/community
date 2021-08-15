@@ -53,7 +53,7 @@ public class QuestionServiceImpl implements QuestionService {
 
 
     @Override
-    public PaginationDTO list(Integer id, Integer page, Integer size) {
+    public PaginationDTO listById(Integer id, Integer page, Integer size) {
         PaginationDTO pagination = new PaginationDTO();
         int totalCount = questionMapper.countByUserId(id);
         // 计算总页数
@@ -85,13 +85,25 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     @Override
-    public QuestionDTO getQuestionById(Integer questionId) {
+    public QuestionDTO getQuestionDtoById(Integer questionId) {
         QuestionDTO questionDTO = new QuestionDTO();
         Question question = questionMapper.getQuestionById(questionId);
         BeanUtils.copyProperties(question, questionDTO);
         User user = userMapper.findUserById(question.getCreator());
         questionDTO.setUser(user);
         return questionDTO;
+    }
+
+    @Override
+    public void updateOrCreate(Question question) {
+        if (question.getId() == null) {
+            question.setGmtCreate(System.currentTimeMillis());
+            question.setGmtModified(System.currentTimeMillis());
+            questionMapper.create(question);
+        } else {
+            question.setGmtModified(System.currentTimeMillis());
+            questionMapper.update(question);
+        }
     }
 
 }

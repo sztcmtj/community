@@ -1,13 +1,16 @@
 package com.nanxiaoqiao.community.controller;
 
+import com.nanxiaoqiao.community.dto.QuestionDTO;
 import com.nanxiaoqiao.community.mapper.QuestionMapper;
 import com.nanxiaoqiao.community.mapper.UserMapper;
 import com.nanxiaoqiao.community.model.Question;
 import com.nanxiaoqiao.community.model.User;
+import com.nanxiaoqiao.community.service.QuestionService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -19,8 +22,8 @@ import javax.servlet.http.HttpServletRequest;
 public class PublishController {
     @Resource(name = "userMapper")
     private UserMapper userMapper;
-    @Resource(name = "questionMapper")
-    private QuestionMapper questionMapper;
+    @Resource(name = "questionService")
+    private QuestionService questionService;
 
     @GetMapping("/publish")
     public String publish() {
@@ -31,6 +34,7 @@ public class PublishController {
     public String doPublish(@RequestParam(value = "title", required = false)String title,
                             @RequestParam(value = "description", required = false)String description,
                             @RequestParam(value = "tag", required = false)String tag,
+                            @RequestParam(value = "id", required = false)Integer id,
                             HttpServletRequest request,
                             Model model) {
         // 回显
@@ -70,10 +74,26 @@ public class PublishController {
         question.setTitle(title);
         question.setDescription(description);
         question.setTag(tag);
-        question.setGmtCreate(System.currentTimeMillis());
-        question.setGmtModified(System.currentTimeMillis());
         question.setCreator(user.getId());
-        questionMapper.create(question);
+        question.setId(id);
+        questionService.updateOrCreate(question);
         return "redirect:/";
+    }
+
+    /**
+     * 编辑文章，路径带id
+     * @param id
+     * @param model
+     * @return
+     */
+    @GetMapping("publish/{id}")
+    public String edit(@PathVariable(name = "id")Integer id,
+                     Model model) {
+        QuestionDTO question = questionService.getQuestionDtoById(id);
+        model.addAttribute("id", id);
+        model.addAttribute("title", question.getTitle());
+        model.addAttribute("description", question.getDescription());
+        model.addAttribute("tag", question.getTag());
+        return "publish";
     }
 }
