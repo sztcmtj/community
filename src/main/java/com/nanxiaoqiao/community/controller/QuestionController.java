@@ -1,4 +1,4 @@
-package com.nanxiaoqiao.community.controllers;
+package com.nanxiaoqiao.community.controller;
 
 import com.nanxiaoqiao.community.dto.QuestionDTO;
 import com.nanxiaoqiao.community.service.QuestionService;

@@ -1,7 +1,6 @@
-package com.nanxiaoqiao.community.controllers;
+package com.nanxiaoqiao.community.controller;
 
 import com.nanxiaoqiao.community.dto.PaginationDTO;
-import com.nanxiaoqiao.community.mapper.UserMapper;
 import com.nanxiaoqiao.community.model.User;
 import com.nanxiaoqiao.community.service.QuestionService;
 import org.springframework.stereotype.Controller;
@@ -11,7 +10,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.annotation.Resource;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
 @Controller

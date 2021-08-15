@@ -34,7 +34,7 @@ public class QuestionServiceImpl implements QuestionService {
             page = pagination.getTotalPage();
         }
         pagination.setPagination(page);
-        int offset = (page - 1) * size;
+        int offset = Math.max((page - 1) * size, 0);
         List<Question> questions = questionMapper.list(offset, size);
         List<QuestionDTO> questionDTOS = new ArrayList<>();
         for (Question question: questions) {
