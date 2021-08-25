@@ -7,7 +7,7 @@ import com.nanxiaoqiao.community.model.Question;
 public interface QuestionService {
     PaginationDTO list(int page, int size);
 
-    PaginationDTO listById(Integer id, Integer page, Integer size);
+    PaginationDTO listByUserId(Integer id, Integer page, Integer size);
 
     QuestionDTO getQuestionDtoById(Integer questionId);
 

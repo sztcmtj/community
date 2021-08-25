@@ -6,6 +6,7 @@
 <generatorConfiguration>
 
     <context id="DB2Tables" targetRuntime="MyBatis3">
+        <plugin type="org.mybatis.generator.plugins.RowBoundsPlugin"></plugin>
         <jdbcConnection driverClass="com.mysql.jdbc.Driver"
                         connectionURL="jdbc:mysql://rm-uf6035w93oz8dk44tco.mysql.rds.aliyuncs.com:3306/community?useSSL=true"
                         userId="work"
@@ -35,7 +36,6 @@
         <table schema="DB2ADMIN" tableName="question" domainObjectName="Question">
 
         </table>
-
 
     </context>
 </generatorConfiguration>
